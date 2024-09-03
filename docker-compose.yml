@@ -3,11 +3,36 @@ version: '3'
 services:
   web:
     build: .
+    container_name: mailhandler
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - "8090:8000"
+
+  celery:
+    build: .
+    container_name: celery_worker
+    command: celery -A MailHandler worker --loglevel=info
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    environment:
+      - CELERY_BROKER_URL=${REDIS_LOCATION}
+      - CELERY_RESULT_BACKEND=${REDIS_LOCATION}
+
+  celery-beat:
+    build: .
+    container_name: celery_beat
+    command: celery -A MailHandler beat --loglevel=info
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    environment:
+      - CELERY_BROKER_URL=${REDIS_LOCATION}
+      - CELERY_RESULT_BACKEND=${REDIS_LOCATION}
 
 networks:
   default:

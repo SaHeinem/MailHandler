@@ -15,6 +15,7 @@ Before running this app, ensure you have the following services running:
 
 - A PostgreSQL database
 - A Redis server (or a compatible drop-in replacement)
+  - separating the cache and celery into two shards is necessary
 
 
 ### Setup
