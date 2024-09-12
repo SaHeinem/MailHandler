@@ -120,31 +120,17 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "Europe/Berlin"
 
-<<<<<<< HEAD
-# Celery configurations
-=======
->>>>>>> 72f6a2e0c4ea0c8f38a80904f58c12f484538616
 app = Celery(
     "MailHandler",
     broker=os.getenv("REDIS_LOCATION"),
 )
 
-<<<<<<< HEAD
 CELERY_BEAT_SCHEDULE = {
     "fetch-tokens-every-minute": {
         "task": "manage.tasks.fetch_tokens",
         "schedule": timedelta(minutes=1),
     },
 }
-=======
-# # Celery configurations
-# CELERY_BEAT_SCHEDULE = {
-#     "fetch-tokens-every-minute": {
-#         "task": "manage.tasks.fetch_tokens",
-#         "schedule": timedelta(minutes=1),
-#     },
-# }
->>>>>>> 72f6a2e0c4ea0c8f38a80904f58c12f484538616
 
 
 # Password validation
