@@ -13,14 +13,12 @@ logger = logging.getLogger(__name__)
 def fetch_unread_emails():
     mailboxes = Mailbox.objects.all()  # Get all mailboxes
     for mailbox in mailboxes:
-        logger.info(f"~~~~~~ Fetching unread emails for {mailbox.name}...")
 
         tenant_id = mailbox.client.tenant.tenant_id  # Correct external tenant ID
         client_id = mailbox.client.client_id  # Correct external client ID
 
         cache_key = f"token:{tenant_id}:{client_id}:{mailbox.name}"
 
-        logger.info(f"Looking for access token with key: {cache_key}")
         access_token = cache.get(cache_key)
 
         if access_token:

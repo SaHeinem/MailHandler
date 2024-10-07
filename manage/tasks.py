@@ -10,7 +10,10 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 def fetch_tokens(mailbox_id=None):
-    mailboxes = Mailbox.objects.all()
+    # Fetch all mailboxes, but only process those with a default_jira_issue_type set
+    mailboxes = Mailbox.objects.filter(
+        default_jira_issue_type__isnull=False, is_active=True
+    )
 
     for mailbox in mailboxes:
         client = mailbox.client
@@ -22,7 +25,7 @@ def fetch_tokens(mailbox_id=None):
             # Check if the token already exists in cache
             cache_key = f"token:{tenant_id}:{client_id}:{mailbox.name}"
             if cache.get(cache_key):
-                logger.info(f"Token already exists for {mailbox.name}, skipping fetch.")
+                # Token already exists, no need to fetch again
                 continue
 
             # Fetch token and store it in cache
@@ -41,9 +44,6 @@ def fetch_tokens(mailbox_id=None):
 
             # Set token in cache for half of its expiration time
             cache.set(cache_key, access_token, timeout=expires_in)
-
-            # Log the token for debugging purposes
-            logger.info(f"Token fetched and stored for {mailbox.name}: {access_token}")
 
         except requests.HTTPError as e:
             logger.error(f"Error fetching token for {mailbox.name}: {str(e)}")
