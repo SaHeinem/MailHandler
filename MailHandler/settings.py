@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Own apps
     "manage",
+    "read",
     # 3rd party apps
     "rest_framework",
 ]
@@ -128,6 +129,10 @@ app = Celery(
 CELERY_BEAT_SCHEDULE = {
     "fetch-tokens-every-minute": {
         "task": "manage.tasks.fetch_tokens",
+        "schedule": timedelta(minutes=1),
+    },
+    "fetch-unread-emails-every-minutes": {
+        "task": "read.tasks.fetch_unread_emails",
         "schedule": timedelta(minutes=1),
     },
 }
