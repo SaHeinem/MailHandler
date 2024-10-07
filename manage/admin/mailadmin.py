@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib import messages
-from manage.models import Tenant, Client, ClientSecret, Mailbox, Alias
+from manage.models import Tenant, Client, ClientSecret, Mailbox
 from manage.forms import MailboxForm, ClientSecretForm
 from manage.utils import set_user_audit_fields
 from manage.tasks import fetch_tokens
@@ -82,14 +82,14 @@ class MailboxAdmin(admin.ModelAdmin):
 admin.site.register(Mailbox, MailboxAdmin)
 
 
-class AliasAdmin(admin.ModelAdmin):
-    list_display = ("alias", "mailbox", "created_at", "updated_at")
-    search_fields = ("alias", "mailbox__name")
-    readonly_fields = ("created_at", "updated_at", "created_by", "modified_by")
+# class AliasAdmin(admin.ModelAdmin):
+#     list_display = ("alias", "mailbox", "created_at", "updated_at")
+#     search_fields = ("alias", "mailbox__name")
+#     readonly_fields = ("created_at", "updated_at", "created_by", "modified_by")
 
-    def save_model(self, request, obj, form, change):
-        set_user_audit_fields(request, obj, change)
-        super().save_model(request, obj, form, change)
+#     def save_model(self, request, obj, form, change):
+#         set_user_audit_fields(request, obj, change)
+#         super().save_model(request, obj, form, change)
 
 
-admin.site.register(Alias, AliasAdmin)
+# admin.site.register(Alias, AliasAdmin)

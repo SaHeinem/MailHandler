@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .client import Client
-from .jira import JiraIssueType
+from .jira import JiraIssueType, JiraProject
 from manage.utils import encrypt_data, decrypt_data
 
 
@@ -10,6 +10,9 @@ class Mailbox(models.Model):
     mailbox_secret = models.CharField(max_length=255)
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, related_name="mailboxes"
+    )
+    default_jira_project = models.ForeignKey(
+        JiraProject, on_delete=models.PROTECT, related_name="mailboxes"
     )
     default_jira_issue_type = models.ForeignKey(
         JiraIssueType, on_delete=models.PROTECT, related_name="mailboxes"
@@ -43,26 +46,32 @@ class Mailbox(models.Model):
         return decrypt_data(self.mailbox_secret)
 
 
-class Alias(models.Model):
-    alias = models.CharField(max_length=255)
-    mailbox = models.ForeignKey(
-        Mailbox, on_delete=models.CASCADE, related_name="aliases"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, related_name="aliases_created"
-    )
-    modified_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="aliases_modified",
-    )
+# class Alias(models.Model):
+#     alias = models.CharField(max_length=255)
+#     mailbox = models.ForeignKey(
+#         Mailbox, on_delete=models.CASCADE, related_name="aliases"
+#     )
+#     default_jira_project = models.ForeignKey(
+#         JiraProject, on_delete=models.PROTECT, related_name="mailboxes"
+#     )
+#     default_jira_issue_type = models.ForeignKey(
+#         JiraIssueType, on_delete=models.PROTECT, related_name="mailboxes"
+#     )
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     created_by = models.ForeignKey(
+#         User, on_delete=models.SET_NULL, null=True, related_name="aliases_created"
+#     )
+#     modified_by = models.ForeignKey(
+#         User,
+#         on_delete=models.SET_NULL,
+#         null=True,
+#         blank=True,
+#         related_name="aliases_modified",
+#     )
 
-    class Meta:
-        verbose_name_plural = "aliases"
+#     class Meta:
+#         verbose_name_plural = "aliases"
 
-    def __str__(self):
-        return self.alias
+#     def __str__(self):
+#         return self.alias

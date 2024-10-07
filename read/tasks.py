@@ -52,6 +52,7 @@ def fetch_unread_emails():
                             sender_address=email["sender"]["emailAddress"]["address"],
                             from_name=email["from"]["emailAddress"]["name"],
                             from_address=email["from"]["emailAddress"]["address"],
+                            cc_recipients=email["ccRecipients"],
                             to_recipients=email[
                                 "toRecipients"
                             ],  # Assuming this field is JSON
