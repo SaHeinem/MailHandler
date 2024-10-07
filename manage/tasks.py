@@ -4,15 +4,12 @@ import logging
 from celery import shared_task
 from .models import Mailbox, ClientSecret
 from .utils import decrypt_data
-import os
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
 def fetch_tokens(mailbox_id=None):
-    logger.info(f"CLIENT_ID: {os.getenv('CLIENT_ID')}")
-    logger.info(f"CLIENT_SECRET: {os.getenv('CLIENT_SECRET')}")
     mailboxes = Mailbox.objects.all()
 
     for mailbox in mailboxes:
@@ -43,7 +40,7 @@ def fetch_tokens(mailbox_id=None):
             )  # Default to 1 hour if not provided
 
             # Set token in cache for half of its expiration time
-            cache.set(cache_key, access_token, timeout=expires_in // 2)
+            cache.set(cache_key, access_token, timeout=expires_in)
 
             # Log the token for debugging purposes
             logger.info(f"Token fetched and stored for {mailbox.name}: {access_token}")
