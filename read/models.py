@@ -28,7 +28,7 @@ class ReceivedEmailMessage(models.Model):
     to_recipients = models.JSONField()
 
     # Cc recipients (this could be a foreign key to another model or a JSON field)
-    cc_recipients = models.JSONField()
+    cc_recipients = models.JSONField(null=True, blank=True)
 
     jiraissueid = models.CharField(max_length=255, null=True)
     is_ticket_trigger = models.BooleanField(default=True)
